@@ -1,0 +1,77 @@
+name: Build APK SAFE FIX
+
+on:
+workflow_dispatch:
+
+jobs:
+build:
+runs-on: ubuntu-22.04
+
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
+
+  - name: Install system dependencies
+    run: |
+      sudo apt update
+      sudo apt install -y python3-pip git zip unzip openjdk-17-jdk \
+      autoconf automake libtool pkg-config \
+      zlib1g-dev libffi-dev libssl-dev
+
+  - name: Install Buildozer
+    run: |
+      python3 -m pip install --upgrade pip
+      python3 -m pip install cython==0.29.36 buildozer==1.5.0
+
+  - name: Fix Android environment
+    run: |
+      mkdir -p $HOME/.android
+      touch $HOME/.android/repositories.cfg
+
+  - name: Build APK
+    run: |
+      buildozer -v android debug
+
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: apk
+      path: bin/*.apkname: Build APK SAFE FIX
+
+on:
+workflow_dispatch:
+
+jobs:
+build:
+runs-on: ubuntu-22.04
+
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
+
+  - name: Install system dependencies
+    run: |
+      sudo apt update
+      sudo apt install -y python3-pip git zip unzip openjdk-17-jdk \
+      autoconf automake libtool pkg-config \
+      zlib1g-dev libffi-dev libssl-dev
+
+  - name: Install Buildozer
+    run: |
+      python3 -m pip install --upgrade pip
+      python3 -m pip install cython==0.29.36 buildozer==1.5.0
+
+  - name: Fix Android environment
+    run: |
+      mkdir -p $HOME/.android
+      touch $HOME/.android/repositories.cfg
+
+  - name: Build APK
+    run: |
+      buildozer -v android debug
+
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: apk
+      path: bin/*.apk
