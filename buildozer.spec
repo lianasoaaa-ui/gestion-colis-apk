@@ -13,6 +13,5 @@ requirements = python3,kivy
 orientation = portrait
 
 android.api = 33
-android.minapi = 21
-
-android.permissions = INTERNET
+android.build_tools_version = 33.0.2
+android.ndk = 25b
