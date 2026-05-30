@@ -1,0 +1,43 @@
+name: Build APK Stable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+          git zip unzip openjdk-17-jdk \
+          python3-pip autoconf automake libtool pkg-config \
+          zlib1g-dev libffi-dev libssl-dev
+
+      - name: Install Buildozer
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install buildozer==1.5.0 cython==0.29.36
+
+      - name: Fix Android environment (IMPORTANT)
+        run: |
+          mkdir -p $HOME/.buildozer
+          mkdir -p $HOME/.android
+          echo "count=0" > $HOME/.android/repositories.cfg
+
+      - name: Build APK (force stable mode)
+        run: |
+          export ANDROIDAPI=33
+          export ANDROIDMINAPI=21
+          buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: bin/*.apk
